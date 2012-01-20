@@ -1,5 +1,5 @@
 /**
- * jquery.textSelect JavaScript Library v0.1
+ * jquery.textSelect jQuery Custom Event v0.1
  * http://jamesmgreene.github.com/jquery.textSelect/
  *
  * Copyright © 2012: James Greene (Team Gunmetal, Inc.)
