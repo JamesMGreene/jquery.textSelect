@@ -96,10 +96,12 @@
             getSelectedText: function() {
 				var text = "";
                 if (win.getSelection) {
-                    var sel = win.getSelection();
+                    var sel = win.getSelection(),
+						ranges = [];
                     for (var r = 0; r < sel.rangeCount; r++) {
-                        text += sel.getRangeAt(r).toString();
+                        ranges.push(sel.getRangeAt(r).toString());
                     }
+					text = ranges.join("");
                 }
                 else if (document.selection) {
                     text = document.selection.createRange().text;
