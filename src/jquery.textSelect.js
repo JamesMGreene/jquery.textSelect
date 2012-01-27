@@ -35,17 +35,22 @@
             });
 
             $this.on("mouseup" + namespaces, selector, function($event) {
-                if (mouseDownRegistrar[this] && $.event.special.textSelect.defaults.isTextSelected()) {
+				var currentlySelectedText = $.event.special.textSelect.defaults.getSelectedText();
+                if (mouseDownRegistrar[this] && !!currentlySelectedText) {
                     var $startSelectionEvent = mouseDownRegistrar[this],
                         $eventType = $event.type,
-                        $eventRelatedTarget = $event.relatedTarget;
-                    var $eventData = $event.data;
+                        $eventRelatedTarget = $event.relatedTarget,
+						$eventData = $event.data;
                     
                     // The following is effectively a stopPropagation for the textSelect event bubble
                     mouseDownRegistrar = {};
 
                     $event.type = handleObj.origType;
                     $event.relatedTarget = $startSelectionEvent.target;
+					
+					$event.data = jQuery.extend(true, {}, eventData, {
+						selectedText: currentlySelectedText
+					});
 
                     // Let jQuery handle the triggering of "textSelect" event handlers
                     jQuery.event.dispatch.apply(this, arguments);
@@ -53,6 +58,8 @@
                     // Revert the event back to its previous state for bubbling
                     $event.type = $eventType;
                     $event.relatedTarget = $eventRelatedTarget;
+					
+					$event.data = $eventData;
                 }
             });
         },
@@ -86,19 +93,21 @@
 
         /* Add some jQueryUI-style default behavior implementations that can be overridden */
         defaults: {
-            isTextSelected: function() {
-                var text = "";
+            getSelectedText: function() {
+				var text = "";
                 if (win.getSelection) {
-                    var sel = win.getSelection();
+                    var sel = win.getSelection(),
+						ranges = [];
                     for (var r = 0; r < sel.rangeCount; r++) {
-                        text += sel.getRangeAt(r).toString();
+                        ranges.push(sel.getRangeAt(r).toString());
                     }
+					text = ranges.join("");
                 }
                 else if (document.selection) {
                     text = document.selection.createRange().text;
                 }
-                return !!text;
-            },
+                return text;
+			},
 
             simulateSelection: function(el, eventData) {
                 var $el = $(el),
@@ -115,7 +124,7 @@
                         lastTextNode = $textNodeDescendants.last().get(0),
                         sel = win.getSelection();
 
-                    if(sel.rangeCount > 0) {
+                    if (sel.rangeCount > 0) {
                         sel.removeAllRanges();
                     }
                     range = doc.createRange();
