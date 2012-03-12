@@ -51,7 +51,7 @@
 					
 					// Request custom event data, if any is desired, and merge it into the main event data
 					customEventData = $.event.special.textSelect.defaults.getCustomEventData($event) || {};
-					$event.data = jQuery.extend(true, {}, eventData, customEventData);
+					$event.data = jQuery.extend(true, {}, $eventData, customEventData);
 
                     // Let jQuery handle the triggering of "textSelect" event handlers
                     jQuery.event.dispatch.apply(this, arguments);
