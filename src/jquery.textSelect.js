@@ -35,22 +35,23 @@
             });
 
             $this.on("mouseup" + namespaces, selector, function($event) {
-				var currentlySelectedText = $.event.special.textSelect.defaults.getSelectedText();
-                if (mouseDownRegistrar[this] && !!currentlySelectedText) {
+                if (mouseDownRegistrar[this] && !!$.event.special.textSelect.defaults.getSelectedText()) {
                     var $startSelectionEvent = mouseDownRegistrar[this],
                         $eventType = $event.type,
                         $eventRelatedTarget = $event.relatedTarget,
-						$eventData = $event.data;
+						$eventData = $event.data,
+						customEventData;
                     
                     // The following is effectively a stopPropagation for the textSelect event bubble
                     mouseDownRegistrar = {};
 
+					// Update the event object
                     $event.type = handleObj.origType;
                     $event.relatedTarget = $startSelectionEvent.target;
 					
-					$event.data = jQuery.extend(true, {}, eventData, {
-						selectedText: currentlySelectedText
-					});
+					// Request custom event data, if any is desired, and merge it into the main event data
+					customEventData = $.event.special.textSelect.defaults.getCustomEventData($event) || {};
+					$event.data = jQuery.extend(true, {}, eventData, customEventData);
 
                     // Let jQuery handle the triggering of "textSelect" event handlers
                     jQuery.event.dispatch.apply(this, arguments);
@@ -58,7 +59,6 @@
                     // Revert the event back to its previous state for bubbling
                     $event.type = $eventType;
                     $event.relatedTarget = $eventRelatedTarget;
-					
 					$event.data = $eventData;
                 }
             });
@@ -85,7 +85,7 @@
             if (data) {
                 $eventData = $.extend(true, $eventData || {}, data);
             }
-            $.event.special.textSelect.defaults.simulateSelection(this, $eventData);
+            $.event.special.textSelect.defaults.simulateTextSelection(this, $eventData);
 
             // Prevent the normal handling (bubbling) of this event
             return false;
@@ -108,8 +108,15 @@
                 }
                 return text;
 			},
+			
+			getCustomEventData = function($event) {
+				var currentlySelectedText = $.event.special.textSelect.defaults.getSelectedText();
+                return {
+					selectedText: currentlySelectedText
+				};
+			},
 
-            simulateSelection: function(el, eventData) {
+            simulateTextSelection: function(el, eventData) {
                 var $el = $(el),
                     range;
 
