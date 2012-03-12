@@ -108,7 +108,7 @@
 				return text;
 			},
 
-			getCustomEventData = function ($event) {
+			getCustomEventData: function ($event) {
 				var currentlySelectedText = $.event.special.textSelect.defaults.getSelectedText();
 				return {
 					selectedText: currentlySelectedText
