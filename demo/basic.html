@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>jQuery.textSelect: Basic Demo</title>
+	<link type="text/css" rel="stylesheet" href="stylesheet.css" />
+</head>
+<body>
+<header>
+	<h1>Note: Please have the JavaScript console open during the demo!</h1>
+</header>
+<div role="main">
+	<section class="selectable" id="selectable1">
+		<h4>Selectable stuff</h4>
+
+		<div>
+			<span>Lorem ipsum blah blah blah. 11</span>
+			<span>Lorem ipsum blah blah blah. 12</span>
+			<span>Lorem ipsum blah blah blah. 13</span>
+		</div>
+		<div>
+			<span>Lorem ipsum blah blah blah. 21</span>
+			<span>Lorem ipsum blah blah blah. 22</span>
+			<span>Lorem ipsum blah blah blah. 23</span>
+		</div>
+		<div>
+			<span>Lorem ipsum blah blah blah. 31</span>
+			<span>Lorem ipsum blah blah blah. 32</span>
+			<span>Lorem ipsum blah blah blah. 33</span>
+		</div>
+	</section>
+</div>
+
+<footer>
+	<a href="../index.html">Back to the main project page</a>
+</footer>
+
+<!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline or using file protocol -->
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script type="text/javascript" src="../libs/jquery-1.7.1.min.js"><\/script>')</script>
+
+<script type="text/javascript" src="../src/jquery.textSelect.js"></script>
+<script type="text/javascript" id="runtimeTests">
+	function writeLog(msg) {
+		console.log(msg);
+	}
+
+	$(document).ready(function() {
+		// TODO: Respect event.data, if needed [ http://api.jquery.com/on/ ]
+		// TODO: Add tests for adding to body (see if it conflicts with the global handler)
+		// TODO: Add tests for overlapping regions (more than one textSelect handler on a given element)
+		// TODO: Add "on" test using event map (and any other overloaded params)
+
+//		$(".selectable").bind("textSelect", function($event) {
+//			writeLog("Selectable [hooked up with 'bind' method] fired!\nText selected was: " + $event.data.selectedText);
+//		});
+//		$(".selectable").bind("textSelect.someNamespace", function($event) {
+//			writeLog("Selectable [hooked up with 'bind' method] fired!\nText selected was: " + $event.data.selectedText);
+//		});
+//		$(".selectable").bind("textSelect", { customProp: "blah" }, function($event, customParams) {
+//			writeLog("Selectable [hooked up with 'bind' method] fired!\nParams: " + JSON.stringify(customParams) + "\nText selected was: " + $event.data.selectedText);
+//		});
+//		$(".selectable").bind({
+//			"textSelect": function($event) {
+//				writeLog("Selectable [hooked up with 'bind' method] fired!\nText selected was: " + $event.data.selectedText);
+//			}
+//		});
+		$(".selectable").on("textSelect", function($event) {
+			writeLog("Selectable [hooked up with 'on' method] fired!\nText selected was: " + $event.data.selectedText);
+		});
+//		$(".selectable").on("textSelect", "span", function($event) {
+//			writeLog("Selectable [hooked up with 'on' method] fired!\nText selected was: " + $event.data.selectedText);
+//		});
+//		$(".selectable").on("textSelect", "span", { customProp: "blah" }, function($event, customParams) {
+//			writeLog("Selectable [hooked up with 'on' method] fired!\nParams: " + JSON.stringify(customParams) + "\nText selected was: " + $event.data.selectedText);
+//		});
+//		$(".selectable").on("textSelect", { customProp: "blah" }, function($event, customParams) {
+//			writeLog("Selectable [hooked up with 'on' method] fired!\nParams: " + JSON.stringify(customParams) + "\nText selected was: " + $event.data.selectedText);
+//		});
+//		$(".selectable").textSelect(function($event) {
+//			writeLog("Selectable [hooked up with 'textSelect' method] fired!\nText selected was: " + $event.data.selectedText);
+//		});
+//		$(".selectable").textSelect({ customProp: "blah" }, function($event) {
+//			writeLog("Selectable [hooked up with 'textSelect' method] fired!\nText selected was: " + $event.data.selectedText);
+//		});
+	});
+</script>
+</body>
+</html>

@@ -18,16 +18,17 @@
 	$.event.special.textSelect = {
 		/* Invoked each time this event is bound */
 		add: function (handleObj) {
-			// If this is the first "textSelect" binding on the page, we also need to enable the
-			// default handler on the document root in order to make this particular event possible.
+			// If this is the first "textSelect" binding on the page, we also need to enable the default handler on the
+			// document root in order to make this particular event possible.
 			if (0 === textSelectBindingCount++) {
 				$doc.on("mouseup" + defaultNamespaces, function ($event) {
 					console.log("document.mouseup");
 					mouseDownRegistrar = {};
 				});
 			}
-			var namespaces = customEventNamespace + (handleObj.namespace ? "." + handleObj.namespace : handleObj.namespace),
+			var namespaces = customEventNamespace + (handleObj.namespace ? "." + handleObj.namespace : ""),
 			    selector = handleObj.selector,
+			    boundData = handleObj.data || {},
 			    $this = $(this);
 
 			$this.on("mousedown" + namespaces, selector, function ($event) {
@@ -35,7 +36,7 @@
 			});
 
 			$this.on("mouseup" + namespaces, selector, function ($event) {
-				if (mouseDownRegistrar[this] && !! $.event.special.textSelect.defaults.getSelectedText()) {
+				if (mouseDownRegistrar[this] && !! $.event.special.textSelect.defaultOptions.getSelectedText()) {
 					var $startSelectionEvent = mouseDownRegistrar[this],
 					    $eventType = $event.type,
 					    $eventRelatedTarget = $event.relatedTarget,
@@ -49,12 +50,14 @@
 					$event.type = handleObj.origType;
 					$event.relatedTarget = $startSelectionEvent.target;
 
-					// Request custom event data, if any is desired, and merge it into the main event data
-					customEventData = $.event.special.textSelect.defaults.getCustomEventData($event) || {};
-					$event.data = jQuery.extend(true, {}, $eventData, customEventData);
+					// Request custom event data, if any is desired, and merge it into the main event data.
+					// Due to curiosities of the jQuery.event.dispatch function, the object we would want as $event.data
+					// must be stored in handleObj.data instead [which jQuery then forcibly copies into $event.data].
+					customEventData = $.event.special.textSelect.defaultOptions.getCustomEventData($event) || {};
+					handleObj.data = $.extend(true, {}, $eventData, boundData, customEventData);
 
 					// Let jQuery handle the triggering of "textSelect" event handlers
-					jQuery.event.dispatch.apply(this, arguments);
+					$.event.dispatch.apply(this, arguments);
 
 					// Revert the event back to its previous state for bubbling
 					$event.type = $eventType;
@@ -85,14 +88,14 @@
 			if (data) {
 				$eventData = $.extend(true, $eventData || {}, data);
 			}
-			$.event.special.textSelect.defaults.simulateTextSelection(this, $eventData);
+			$.event.special.textSelect.defaultOptions.simulateTextSelection(this, $eventData);
 
 			// Prevent the normal handling (bubbling) of this event
 			return false;
 		},
 
 		/* Add some jQueryUI-style default behavior implementations that can be overridden */
-		defaults: {
+		defaultOptions: {
 			getSelectedText: function () {
 				var text = "";
 				if (win.getSelection) {
@@ -102,14 +105,14 @@
 						ranges.push(sel.getRangeAt(r).toString());
 					}
 					text = ranges.join("");
-				} else if (document.selection) {
-					text = document.selection.createRange().text;
+				} else if (doc.selection) {
+					text = doc.selection.createRange().text;
 				}
 				return text;
 			},
 
 			getCustomEventData: function ($event) {
-				var currentlySelectedText = $.event.special.textSelect.defaults.getSelectedText();
+				var currentlySelectedText = $.event.special.textSelect.defaultOptions.getSelectedText();
 				return {
 					selectedText: currentlySelectedText
 				};
@@ -124,7 +127,7 @@
 
 				// Simulate the text selection
 				if (win.getSelection) {
-					var TEXT_NODE = typeof (Node) !== "undefined" ? Node.TEXT_NODE : 3,
+					var TEXT_NODE = typeof(Node) !== "undefined" ? Node.TEXT_NODE : 3,
 					    $textNodeDescendants = $el.contents().filter(function () {
 					    	return this.nodeType == TEXT_NODE;
 					    }),
