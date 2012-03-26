@@ -1,5 +1,5 @@
 /**
- * jquery.textSelect jQuery Custom Event v0.1
+ * jquery.textSelect jQuery Custom Event v0.2
  * http://jamesmgreene.github.com/jquery.textSelect/
  *
  * Copyright © 2012: James Greene (Team Gunmetal, Inc.)
@@ -7,41 +7,41 @@
  * http://www.opensource.org/licenses/mit-license.php
  */
 
-(function ($, win) {
+(function($, win) {
 	var doc = win.document,
-	    $doc = $(doc),
-	    textSelectBindingCount = 0,
-	    mouseDownRegistrar = {},
-	    customEventNamespace = ".textSelect",
-	    defaultNamespaces = customEventNamespace + ".default";
+		$doc = $(doc),
+		textSelectBindingCount = 0,
+		mouseDownRegistrar = {},
+		customEventNamespace = ".textSelect",
+		defaultNamespaces = customEventNamespace + ".default";
 
 	$.event.special.textSelect = {
 		/* Invoked each time this event is bound */
-		add: function (handleObj) {
+		add: function(handleObj) {
 			// If this is the first "textSelect" binding on the page, we also need to enable the default handler on the
 			// document root in order to make this particular event possible.
 			if (0 === textSelectBindingCount++) {
-				$doc.on("mouseup" + defaultNamespaces, function ($event) {
-					console.log("document.mouseup");
+				$doc.on("mouseup" + defaultNamespaces, function($event) {
+					console.log("document.mouseup [Final bubble! No additional handlers will be invoked]");
 					mouseDownRegistrar = {};
 				});
 			}
 			var namespaces = customEventNamespace + (handleObj.namespace ? "." + handleObj.namespace : ""),
-			    selector = handleObj.selector,
-			    boundData = handleObj.data || {},
-			    $this = $(this);
+				selector = handleObj.selector,
+				$this = $(this);
 
-			$this.on("mousedown" + namespaces, selector, function ($event) {
+			$this.on("mousedown" + namespaces, selector, function($event) {
 				mouseDownRegistrar[this] = $event;
 			});
 
-			$this.on("mouseup" + namespaces, selector, function ($event) {
-				if (mouseDownRegistrar[this] && !! $.event.special.textSelect.defaultOptions.getSelectedText()) {
+			$this.on("mouseup" + namespaces, selector, function($event) {
+				var behaviors = $.event.special.textSelect.behaviors;
+				if (mouseDownRegistrar[this] && !!behaviors.getSelectedText()) {
 					var $startSelectionEvent = mouseDownRegistrar[this],
-					    $eventType = $event.type,
-					    $eventRelatedTarget = $event.relatedTarget,
-					    $eventData = $event.data,
-					    customEventData;
+						$eventType = $event.type,
+						$eventRelatedTarget = $event.relatedTarget,
+						$eventData = $event.data,
+						customEventData;
 
 					// The following is effectively a stopPropagation for the textSelect event bubble
 					mouseDownRegistrar = {};
@@ -53,8 +53,8 @@
 					// Request custom event data, if any is desired, and merge it into the main event data.
 					// Due to curiosities of the jQuery.event.dispatch function, the object we would want as $event.data
 					// must be stored in handleObj.data instead [which jQuery then forcibly copies into $event.data].
-					customEventData = $.event.special.textSelect.defaultOptions.getCustomEventData($event) || {};
-					handleObj.data = $.extend(true, {}, $eventData, boundData, customEventData);
+					customEventData = behaviors.getCustomEventData($event);
+					handleObj.data = $.extend(true, {}, $eventData, handleObj.data, customEventData);
 
 					// Let jQuery handle the triggering of "textSelect" event handlers
 					$.event.dispatch.apply(this, arguments);
@@ -68,72 +68,68 @@
 		},
 
 		/* Invoked each time this event is unbound */
-		remove: function (handleObj) {
+		remove: function(handleObj) {
 			// If this is the last "textSelect" unbinding on the page, we should also disable the
 			// default handler on the document root as it is no longer necessary.
 			if (0 === --textSelectBindingCount) {
 				$doc.off(defaultNamespaces);
 			}
-			var namespaces = customEventNamespace + (handleObj.namespace ? "." + handleObj.namespace : handleObj.namespace),
-			    selector = handleObj.selector,
-			    $this = $(this);
+			var namespaces = customEventNamespace + (handleObj.namespace ? "." + handleObj.namespace : ""),
+				selector = handleObj.selector,
+				$this = $(this);
 
 			$this.off("mousedown" + namespaces, selector);
 			$this.off("mouseup" + namespaces, selector);
 		},
 
 		/* Invoked each time a manual call to "trigger" or "triggerHandler" is made for this event type */
-		trigger: function ($event, data) {
-			var $eventData = $event.data;
-			if (data) {
-				$eventData = $.extend(true, $eventData || {}, data);
-			}
-			$.event.special.textSelect.defaultOptions.simulateTextSelection(this, $eventData);
+		trigger: function($event, data) {
+			var $this = $(this);
+
+			// Simulate mousedown
+			$this.trigger("mousedown");
+
+			// Simulate the text selection
+			$.event.special.textSelect.behaviors.selectText(this);
+
+			// Simulate mouseup
+			$this.trigger("mouseup");
 
 			// Prevent the normal handling (bubbling) of this event
 			return false;
 		},
 
 		/* Add some jQueryUI-style default behavior implementations that can be overridden */
-		defaultOptions: {
-			getSelectedText: function () {
+		behaviors: {
+			/* This behavior will not be overridden unless it is to address bugs or use a third party library (Rangy) */
+			getSelectedText: function() {
 				var text = "";
 				if (win.getSelection) {
 					var sel = win.getSelection(),
-					    ranges = [];
-					for (var r = 0; r < sel.rangeCount; r++) {
+						ranges = [],
+						r;
+					for (r = 0; r < sel.rangeCount; r++) {
 						ranges.push(sel.getRangeAt(r).toString());
 					}
 					text = ranges.join("");
-				} else if (doc.selection) {
+				}
+				else if (doc.selection) {
 					text = doc.selection.createRange().text;
 				}
 				return text;
 			},
 
-			getCustomEventData: function ($event) {
-				var currentlySelectedText = $.event.special.textSelect.defaultOptions.getSelectedText();
-				return {
-					selectedText: currentlySelectedText
-				};
-			},
-
-			simulateTextSelection: function (el, eventData) {
-				var $el = $(el),
-				    range;
-
-				// Simulate mousedown
-				$el.trigger("mousedown", eventData);
-
-				// Simulate the text selection
+			/* This behavior will not be overridden unless it is to address bugs or use a third party library (Rangy) */
+			selectText: function(el) {
+				var range;
 				if (win.getSelection) {
 					var TEXT_NODE = typeof(Node) !== "undefined" ? Node.TEXT_NODE : 3,
-					    $textNodeDescendants = $el.contents().filter(function () {
-					    	return this.nodeType == TEXT_NODE;
-					    }),
-					    firstTextNode = $textNodeDescendants.first().get(0),
-					    lastTextNode = $textNodeDescendants.last().get(0),
-					    sel = win.getSelection();
+						$textNodeDescendants = $(el).contents().filter(function() {
+							return this.nodeType == TEXT_NODE;
+						}),
+						firstTextNode = $textNodeDescendants.first().get(0),
+						lastTextNode = $textNodeDescendants.last().get(0),
+						sel = win.getSelection();
 
 					if (sel.rangeCount > 0) {
 						sel.removeAllRanges();
@@ -142,20 +138,27 @@
 					range.setStart(firstTextNode, 0);
 					range.setEnd(lastTextNode, lastTextNode.nodeValue.length);
 					sel.addRange(range);
-				} else if (doc.selection) {
+				}
+				else if (doc.selection) {
 					doc.selection.empty();
 					range = el.createTextRange();
 					range.select();
 				}
+			},
 
-				// Simulate mouseup
-				$el.trigger("mouseup", eventData);
+			/* This behavior will be the most desirable to override as you may want more data specific to this event
+			 than the default implementation is offering, such as adding the selectedHtml. */
+			getCustomEventData: function($event) {
+				var currentlySelectedText = $.event.special.textSelect.behaviors.getSelectedText();
+				return {
+					selectedText: currentlySelectedText
+				};
 			}
 		}
 	};
 
-	/* Add the "textSelect" top-level (ease-of-use) event method as a jQuery plugin */
-	$.fn.textSelect = function (handler) {
+	/* Add the "textSelect" shortcut event function as a jQuery plugin */
+	$.fn.textSelect = function(handler) {
 		return handler ? this.on("textSelect", handler) : this.trigger("textSelect");
 	};
 

@@ -66,18 +66,19 @@
 <script>window.jQuery || document.write('<script type="text/javascript" src="../lib/jquery-1.7.1.min.js"><\/script>')</script>
 
 <script type="text/javascript" src="../src/jquery.textSelect.js"></script>
-<script type="text/javascript" id="runtimeTests">
-	function writeLog(msg) {
-		console.log(msg);
-	}
-
+<script type="text/javascript">
 	$(document).ready(function() {
+		$(".selectable").on("textSelect", function($event) {
+			console.log("Selectable [hooked up with 'on' method] fired!\nText selected was: " + $event.data.selectedText);
+		});
+
+		// Hook up a randomizer
 		var lastIndex;
-		$("button").bind("click", function($event) {
+		$("button").on("click", function($event) {
 			// Pick a random ".selectable" element... but NOT the same one as last time!
 			var $selectables = $(".selectable"),
-					len = $selectables.length,
-					index;
+				len = $selectables.length,
+				index;
 			if (len > 1) {
 				do {
 					index = Math.floor(Math.random() * len);
@@ -91,44 +92,6 @@
 			// Simulate the event
 			$selectables.eq(index).trigger("textSelect");
 		});
-
-		// TODO: Respect event.data, if needed [ http://api.jquery.com/on/ ]
-		// TODO: Add tests for adding to body (see if it conflicts with the global handler)
-		// TODO: Add tests for overlapping regions (more than one textSelect handler on a given element)
-		// TODO: Add "on" test using event map (and any other overloaded params)
-
-//		$(".selectable").bind("textSelect", function($event) {
-//			writeLog("Selectable [hooked up with 'bind' method] fired!\nText selected was: " + $event.data.selectedText);
-//		});
-//		$(".selectable").bind("textSelect.someNamespace", function($event) {
-//			writeLog("Selectable [hooked up with 'bind' method] fired!\nText selected was: " + $event.data.selectedText);
-//		});
-//		$(".selectable").bind("textSelect", { customProp: "blah" }, function($event, customParams) {
-//			writeLog("Selectable [hooked up with 'bind' method] fired!\nParams: " + JSON.stringify(customParams) + "\nText selected was: " + $event.data.selectedText);
-//		});
-//		$(".selectable").bind({
-//			"textSelect": function($event) {
-//				writeLog("Selectable [hooked up with 'bind' method] fired!\nText selected was: " + $event.data.selectedText);
-//			}
-//		});
-		$(".selectable").on("textSelect", function($event) {
-			writeLog("Selectable [hooked up with 'on' method] fired!\nText selected was: " + $event.data.selectedText);
-		});
-//		$(".selectable").on("textSelect", "span", function($event) {
-//			writeLog("Selectable [hooked up with 'on' method] fired!\nText selected was: " + $event.data.selectedText);
-//		});
-//		$(".selectable").on("textSelect", "span", { customProp: "blah" }, function($event, customParams) {
-//			writeLog("Selectable [hooked up with 'on' method] fired!\nParams: " + JSON.stringify(customParams) + "\nText selected was: " + $event.data.selectedText);
-//		});
-//		$(".selectable").on("textSelect", { customProp: "blah" }, function($event, customParams) {
-//			writeLog("Selectable [hooked up with 'on' method] fired!\nParams: " + JSON.stringify(customParams) + "\nText selected was: " + $event.data.selectedText);
-//		});
-//		$(".selectable").textSelect(function($event) {
-//			writeLog("Selectable [hooked up with 'textSelect' method] fired!\nText selected was: " + $event.data.selectedText);
-//		});
-//		$(".selectable").textSelect({ customProp: "blah" }, function($event) {
-//			writeLog("Selectable [hooked up with 'textSelect' method] fired!\nParams: " + JSON.stringify(customParams) + "\nText selected was: " + $event.data.selectedText);
-//		});
 	});
 </script>
 </body>
