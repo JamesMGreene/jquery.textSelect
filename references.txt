@@ -1,8 +1,0 @@
-http://benalman.com/news/2010/03/jquery-special-events/#api
-http://brandonaaron.net/blog/2009/03/26/special-events
-https://github.com/brandonaaron/jquery-mousewheel/blob/master/jquery.mousewheel.js
-
-http://www.slideshare.net/dmethvin/jquery-17-events
-
-[UNPUBLISHED] jQuery official guide:
-https://docs.google.com/document/d/11rRFvC51lDU8SBqgcsR5XwVKUeW__RO643iXSEVOdQ4/edit?hl=en_US
