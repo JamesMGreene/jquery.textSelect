@@ -7,7 +7,6 @@ jQuery 1.7+, then this simple jQuery extension can grant that wish for you!
 
 ### Usage
 * `jQuery(selector).on("textSelect", callbackFunc);`
-* `jQuery(selector).textSelect(callbackFunc);`
 
 
 ### Dependencies

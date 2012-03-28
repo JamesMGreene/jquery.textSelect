@@ -156,10 +156,4 @@
 			}
 		}
 	};
-
-	/* Add the "textSelect" shortcut event function as a jQuery plugin */
-	$.fn.textSelect = function(handler) {
-		return handler ? this.on("textSelect", handler) : this.trigger("textSelect");
-	};
-
 })(jQuery, this);
