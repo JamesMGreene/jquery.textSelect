@@ -21,15 +21,15 @@ See the [project pages][1] for additional information, demos, and tests.
 
 ### References
 #### New API (jQuery 1.7+):
-* @dmethvin's [slides regarding "the Great jQuery Event System Refactor of 1.7"][2]
-* [**UNPUBLISHED** official documentation for jQuery special events][3], courtesy of @dmethvin
+* [**@dmethvin**][8]'s [slides regarding "the Great jQuery Event System Refactor of 1.7"][2]
+* [UNPUBLISHED official documentation for jQuery special events][3], courtesy of [**@dmethvin**][8]
 	_Note:_ This documentation is unpublished because the API is still being finalized.
 * [jQuery Mobile's Events][4]
 
 #### Old API (jQuery 1.2, jQuery 1.3, jQuery 1.4-1.6) — only used during research:
-* @cowboy's [in-depth blog post about jQuery special events][5]
-* @brandonaaron's [blog post about jQuery special events][6]
-* @brandonaaron's [jquery.mousewheel event GitHub repo][7]
+* [**@cowboy**][9]'s [in-depth blog post about jQuery special events][5]
+* [**@brandonaaron**][10]'s [blog post about jQuery special events][6]
+* [**@brandonaaron**][10]'s [jquery.mousewheel event GitHub repo][7]
 
 
 [1]: http://jamesmgreene.github.com/jquery.textSelect/
@@ -39,3 +39,6 @@ See the [project pages][1] for additional information, demos, and tests.
 [5]: http://benalman.com/news/2010/03/jquery-special-events/
 [6]: http://brandonaaron.net/blog/2009/03/26/special-events
 [7]: https://github.com/brandonaaron/jquery-mousewheel/
+[8]: https://github.com/dmethvin/
+[9]: https://github.com/cowboy/
+[10]: https://github.com/brandonaaron/
