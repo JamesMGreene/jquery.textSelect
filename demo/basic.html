@@ -35,14 +35,39 @@
 </footer>
 
 <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline or using file protocol -->
-<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script type="text/javascript" src="../lib/jquery-1.7.1.min.js"><\/script>')</script>
+<!--<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>-->
+<script type="text/javascript">window.jQuery || document.write('<script type="text/javascript" src="../lib/jquery-1.7.1.min.js"><\/script>')</script>
 
 <script type="text/javascript" src="../src/jquery.textSelect.js"></script>
 <script type="text/javascript">
-	$(document).ready(function() {
-		$(".selectable").on("textSelect", function($event) {
-			console.log("Selectable [hooked up with 'on' method] fired!\nText selected was: " + $event.data.selectedText);
+	$(document).ready(function () {
+		/*********************
+		 *   Logging setup   *
+		 *********************/
+		$("div[role=main]").append('<h3 style="margin-top: 20px;">Lame Console:</h3>').append('<ul style="border: 1px solid black; height: 200px; overflow-y: auto;"></ul>')
+		$("header").remove();
+
+		var newline = "\r\n",
+			newlineRegex = new RegExp(newline, "g");
+		function escapeHtml(s) {
+			return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+		}
+		function logIt(msg) {
+			//console.log(msg);
+			var $list = $("ul"),
+				cleanMsg = msg.replace(newlineRegex, "<br />&nbsp;&nbsp;");
+			$list.append("<li>* " + cleanMsg + "</li>").
+				prop({ scrollTop: $list.prop("scrollHeight") - $list.height() });
+		};
+
+
+		/***************************
+		 *   Event handler setup   *
+		 ***************************/
+
+		$(".selectable").on("textSelect", function ($event) {
+			logIt('Text selected was: "' + $event.data.text + '"' + newline +
+				'Html selected: "' + escapeHtml($event.data.html) + '"');
 		});
 	});
 </script>
