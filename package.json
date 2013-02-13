@@ -1,0 +1,19 @@
+{
+  "name": "jquery-plugin",
+  "version": "0.0.0-ignored",
+  "engines": {
+    "node": ">= 0.6.0"
+  },
+  "scripts": {
+    "test": "grunt travis --verbose"
+  },
+  "devDependencies": {
+    "grunt-contrib-jshint": "> 0.1.0",
+    "grunt-contrib-connect": "> 0.1.0",
+    "grunt-contrib-qunit": "> 0.1.0",
+    "grunt-contrib-concat": "> 0.1.1",
+    "grunt-contrib-uglify": "> 0.1.0",
+    "grunt-contrib-watch": "> 0.1.0",
+    "grunt": "~0.4.0rc7"
+  }
+}
