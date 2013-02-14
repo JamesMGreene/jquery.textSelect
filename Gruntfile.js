@@ -42,7 +42,7 @@ module.exports = function(grunt) {
       }
     },
     qunit: {
-      file: ['test/textSelect.html'],
+      file: ['test/<%= pkg.title %>.html'],
       http: {
         options: {
           urls: [
@@ -59,7 +59,7 @@ module.exports = function(grunt) {
             '2.0.0b1',
             'git'
           ].map(function(jqVersion) {
-            return 'http://localhost:' + localPort + '/test/textSelect.html?jquery=' + jqVersion;
+            return 'http://localhost:' + localPort + '/test/<%= pkg.title %>.html?jquery=' + jqVersion;
           })
         }
       }
@@ -70,8 +70,8 @@ module.exports = function(grunt) {
         stripBanners: true
       },
       dist: {
-        src: ['src/<%= pkg.name %>.js'],
-        dest: 'dist/<%= pkg.name %>.js'
+        src: ['src/<%= pkg.title %>.js'],
+        dest: 'dist/<%= pkg.title %>.js'
       }
     },
     uglify: {
@@ -80,7 +80,7 @@ module.exports = function(grunt) {
       },
       dist: {
         src: '<%= concat.dist.dest %>',
-        dest: 'dist/<%= pkg.name %>.min.js'
+        dest: 'dist/<%= pkg.title %>.min.js'
       }
     },
     watch: {

@@ -1,4 +1,4 @@
-/*! $.textSelect - v0.5.0 - 2013-02-13
+/*! jquery.textSelect - v0.5.1 - 2013-02-14
 * https://github.com/JamesMGreene/jquery.textSelect
 * Copyright (c) 2013 James M. Greene; Licensed MIT */
 (function($, win) {
