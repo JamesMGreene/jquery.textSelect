@@ -39,7 +39,7 @@
       });
 
       $this.on('mouseup' + namespaces, selector, function($event) {
-        var behaviors = $.event.special.textSelect.behaviors;
+        var behaviors = $.event.special.textSelect.options;
         if (mouseDownRegistrar[this] && !! behaviors.getSelectedText()) {
           var $startSelectionEvent = mouseDownRegistrar[this],
               $eventType = $event.type,
@@ -94,7 +94,7 @@
       $this.trigger('mousedown');
 
       // Simulate the text selection
-      $.event.special.textSelect.behaviors.selectText(this);
+      $.event.special.textSelect.options.selectText(this);
 
       // Simulate mouseup
       $this.trigger('mouseup');
