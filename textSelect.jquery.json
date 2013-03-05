@@ -2,7 +2,7 @@
   "name": "textSelect",
   "title": "jquery.textSelect",
   "description": "Bind to the `textSelect` event, a custom DOM-like event generated using jQuery's Special Events API. The `textSelect` event triggers when the user selects any text within a bound element.",
-  "version": "0.5.1",
+  "version": "1.0.0-alpha.1",
   "homepage": "https://github.com/JamesMGreene/jquery.textSelect",
   "author": {
     "name": "James M. Greene",

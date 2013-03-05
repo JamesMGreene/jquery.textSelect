@@ -1,6 +1,7 @@
-/*! jquery.textSelect - v0.5.1 - 2013-02-14
+/*! jquery.textSelect - v1.0.0-alpha.1 - 2013-06-18
 * https://github.com/JamesMGreene/jquery.textSelect
 * Copyright (c) 2013 James M. Greene; Licensed MIT */
+/*globals jQuery:false */
 (function($, win) {
   'use strict';
 
@@ -35,8 +36,8 @@
       });
 
       $this.on('mouseup' + namespaces, selector, function($event) {
-        var behaviors = $.event.special.textSelect.behaviors;
-        if (mouseDownRegistrar[this] && !! behaviors.getSelectedText()) {
+        var options = $.event.special.textSelect.options;
+        if (mouseDownRegistrar[this] && !! options.getSelectedText()) {
           var $startSelectionEvent = mouseDownRegistrar[this],
               $eventType = $event.type,
               $eventRelatedTarget = $event.relatedTarget,
@@ -53,7 +54,7 @@
           // Request custom event data, if any is desired, and merge it into the main event data.
           // Due to curiosities of the jQuery.event.dispatch function, the object we would want as $event.data
           // must be stored in handleObj.data instead [which jQuery then forcibly copies into $event.data].
-          customEventData = behaviors.getCustomEventData($event);
+          customEventData = options.getCustomEventData($event);
           handleObj.data = $.extend(true, {}, $eventData, handleObj.data, customEventData);
 
           // Let jQuery handle the triggering of 'textSelect' event handlers
@@ -90,7 +91,7 @@
       $this.trigger('mousedown');
 
       // Simulate the text selection
-      $.event.special.textSelect.behaviors.selectText(this);
+      $.event.special.textSelect.options.selectText(this);
 
       // Simulate mouseup
       $this.trigger('mouseup');

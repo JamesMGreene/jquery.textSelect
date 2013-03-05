@@ -1,3 +1,6 @@
+/*jshint node:true, browser:false */
+
+
 'use strict';
 
 module.exports = function(grunt) {
@@ -15,24 +18,10 @@ module.exports = function(grunt) {
       ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
     // Task configuration.
     jshint: {
-      gruntfile: {
-        options: {
-          jshintrc: '.jshintrc'
-        },
-        src: 'Gruntfile.js'
+      options: {
+        jshintrc: '.jshintrc'
       },
-      src: {
-        options: {
-          jshintrc: 'src/.jshintrc'
-        },
-        src: ['src/**/*.js']
-      },
-      test: {
-        options: {
-          jshintrc: 'test/.jshintrc'
-        },
-        src: ['test/**/*.js']
-      }
+      all: ['Gruntfile.js', 'src/**/*.js', 'test/**/*.js']
     },
     connect: {
       server: {
@@ -56,7 +45,8 @@ module.exports = function(grunt) {
             '1.7', '1.7.1', '1.7.2',
             '1.8.0', '1.8.1', '1.8.2', '1.8.3',
             '1.9.0', '1.9.1',
-            '2.0.0b1',
+            '1.10.0', '1.10.1',
+            '2.0.0', '2.0.1',
             'git'
           ].map(function(jqVersion) {
             return 'http://localhost:' + localPort + '/test/<%= pkg.title %>.html?jquery=' + jqVersion;

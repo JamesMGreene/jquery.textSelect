@@ -1,6 +1,7 @@
+/*globals jQuery:false, QUnit:false */
 (function($, undefined) {
 
-  module('jQuery#textSelect', {
+  QUnit.module('jQuery#textSelect', {
     setup: function() {
       
     },
@@ -9,9 +10,9 @@
     }
   });
     
-  test('Should exist', function() {
-    expect(1);
-    ok($.event.special.textSelect);
+  QUnit.test('Should exist', function(assert) {
+    QUnit.expect(1);
+    assert.ok($.event.special.textSelect);
   });
 
 }(jQuery));
