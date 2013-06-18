@@ -5,8 +5,19 @@
 </head>
 <body id="theBody">
 <div id="testElements">
-	<p id="testParagraph">This paragraph is a test element. This paragraph is a test element. This paragraph is a test element.
-	This paragraph is a test element. This paragraph is a test element. This paragraph is a test element. </p>
+	<h3>IE9+ has textual selection events that other browsers do not yet.</h3>
+
+	<form id="controls">
+		<input id="showEvents_select" type="checkbox" checked="checked" /> <label for="showEvents_select">Log `select` events</label><br />
+		<input id="showEvents_selectstart" type="checkbox" checked="checked" /> <label for="showEvents_selectstart">Log `selectstart` events</label><br />
+		<input id="showEvents_selectionchange" type="checkbox" checked="checked" /> <label for="showEvents_selectionchange">Log `selectionchange` events</label><br />
+	</form>
+
+	<p id="testParagraph">
+		This paragraph is a test element. This paragraph is a test element. This paragraph is a test element.
+		<a href="#">This link is a clickable, tab-able test element.</a>
+		This paragraph is a test element. This paragraph is a test element. This paragraph is a test element.
+	</p>
 
 	<form id="testFormMinimal">
 		<p id="paraInForm">This form is a test element, and all of its fields are test elements, too.</p>
@@ -15,29 +26,35 @@
 	</form>
 </div>
 
+<!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline or using file protocol -->
+<!--<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>-->
+<script type="text/javascript">window.jQuery || document.write('<script type="text/javascript" src="../lib/jquery-1.7.1.min.js"><\/script>')</script>
 <script type="text/javascript">
-	window.attachEvent("onload", function() {
-		var callback = function($event) {
-			var target = $event.target || $event.srcElement,
-				targetIsBody = target === document.body,
-				targetIsDoc = target === document,
-				targetIsWin = target === window,
-				thisIsBody = this === document.body,
-				thisIsDoc = this === document,
-				thisIsWin = this === window;
-			console.log("Select!\n" +
-				"  this = " + (this.id || this.nodeName || this.tagName || (thisIsDoc ? "document" : "") || (thisIsWin ? "window" : "")) + "\n" +
-				"  target = " + (target.id || target.nodeName || target.tagName || (targetIsDoc ? "document" : "") || (targetIsWin ? "window" : ""))
-			);
-		};
-		
-		window.addEventListener("select", callback);
-		document.addEventListener("select", callback);
-		document.body.addEventListener("select", callback);
-		var els = document.body.querySelectorAll("*");
-		for (var e = 0, len = els.length; e < len; e++) {
-			els[e].addEventListener("select", callback);
-		}
+	$(document).ready(function() {
+		var selectionEventList = ["selectstart", "select", "selectionchange"],
+				selectionEventString = selectionEventList.join(" "),
+				selectionCallback = function _selectionCallback($event) {
+					var target = $event.target || $event.srcElement,
+							eventType = $event.type,
+							targetIsBody = target === document.body,
+							targetIsDoc = target === document,
+							targetIsWin = target === window,
+							thisIsBody = this === document.body,
+							thisIsDoc = this === document,
+							thisIsWin = this === window;
+
+					if ($("#showEvents_" + eventType).prop("checked")) {
+						console.log(
+							"Event: " + $event.type + "\n" +
+							"  this = " + (this.id || this.tagName || this.nodeName || (thisIsDoc ? "document" : "") || (thisIsWin ? "window" : "")) + "\n" +
+							"  target = " + (target.id || target.tagName || target.nodeName || (targetIsDoc ? "document" : "") || (targetIsWin ? "window" : ""))
+						);
+					}
+				};
+
+		$(window).on(selectionEventString, selectionCallback);
+		$(document).on(selectionEventString, selectionCallback);
+		$("body, body *").on(selectionEventString, selectionCallback);
 	});
 </script>
 
