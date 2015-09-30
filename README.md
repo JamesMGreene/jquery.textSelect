@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/JamesMGreene/jquery.textSelect.png)](https://travis-ci.org/JamesMGreene/jquery.textSelect)
+[![Build Status](https://travis-ci.org/JamesMGreene/jquery.textSelect.png?branch=master)](https://travis-ci.org/JamesMGreene/jquery.textSelect)
 
 # jquery.textSelect
 
